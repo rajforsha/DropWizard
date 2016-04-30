@@ -32,4 +32,8 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 
+	public User createUser(User user) {
+		return user;
+	}
+
 }
