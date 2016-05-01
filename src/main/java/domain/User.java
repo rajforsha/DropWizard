@@ -2,9 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * 
- */
+import annotations.GenderMatcher;
 
 /**
  * @author shashi
@@ -19,6 +17,24 @@ public class User {
 	private int age;
 	@JsonProperty("designation")
 	private String designation;
+	@JsonProperty("gender")
+	@GenderMatcher
+	private String gender;
+
+	/**
+	 * @return the gender
+	 */
+	public String getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender
+	 *            the gender to set
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
 	/**
 	 * @return the name
@@ -65,17 +81,6 @@ public class User {
 		this.age = age;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "User [name=" + name + ", password=" + "********" + ", age=" + age + ", designation=" + designation
-				+ "]";
-	}
-
 	/**
 	 * @return the designation
 	 */
@@ -90,4 +95,16 @@ public class User {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", password=" + password + ", age=" + age + ", designation=" + designation
+				+ ", gender=" + gender + "]";
+	}
+
 }
