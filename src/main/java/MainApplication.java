@@ -1,5 +1,9 @@
+import auth.SimpleAuthenticator;
 import domain.MyConfiguration;
+import domain.User;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.setup.Environment;
 import resource.UserResource;
 
@@ -10,10 +14,18 @@ public class MainApplication extends Application<MyConfiguration> {
 	}
 
 	@Override
+	public String getName() {
+		return "shashi";
+	}
+
+	@Override
 	public void run(MyConfiguration configuration, Environment environment) throws Exception {
 		final UserResource resource = new UserResource() {
 		};
 		environment.jersey().register(resource);
+
+		environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+				.setAuthenticator(new SimpleAuthenticator()).setRealm(getName()).buildAuthFilter()));
 	}
 
 }

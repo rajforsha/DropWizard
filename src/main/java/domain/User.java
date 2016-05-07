@@ -1,5 +1,7 @@
 package domain;
 
+import java.security.Principal;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import annotations.GenderMatcher;
@@ -8,7 +10,7 @@ import annotations.GenderMatcher;
  * @author shashi
  *
  */
-public class User {
+public class User implements Principal {
 	@JsonProperty("name")
 	private String name;
 	@JsonProperty("password")
@@ -20,6 +22,14 @@ public class User {
 	@JsonProperty("gender")
 	@GenderMatcher
 	private String gender;
+
+	public User(String username) {
+		this.name = username;
+	}
+
+	public User() {
+		super();
+	}
 
 	/**
 	 * @return the gender
