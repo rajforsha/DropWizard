@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import domain.User;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.validation.Validated;
 import service.UserService;
 import serviceImpl.UserServiceImpl;
@@ -28,7 +29,7 @@ public class UserResource {
 	 */
 
 	@GET
-	public List<User> getUsers() {
+	public List<User> getUsers(@Auth User user) {
 		return userService.getAllUsers();
 	}
 
