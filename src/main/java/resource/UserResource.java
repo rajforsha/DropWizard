@@ -1,7 +1,5 @@
 package resource;
 
-import java.util.List;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -10,8 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import domain.User;
-import io.dropwizard.auth.Auth;
-import io.dropwizard.validation.Validated;
+import dto.UserDto;
 import service.UserService;
 import serviceImpl.UserServiceImpl;
 
@@ -29,7 +26,7 @@ public class UserResource {
 	 */
 
 	@GET
-	public List<User> getUsers(@Auth User user) {
+	public UserDto getUsers() {
 		return userService.getAllUsers();
 	}
 
@@ -39,7 +36,7 @@ public class UserResource {
 	}
 
 	@POST
-	public User createUser(@Validated User user) {
+	public User createUser(UserDto user) {
 		return (userService.createUser(user));
 	}
 }
