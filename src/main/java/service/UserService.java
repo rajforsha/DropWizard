@@ -1,9 +1,8 @@
 package service;
 
-import java.util.List;
-
 import annotations.service;
 import domain.User;
+import dto.UserDto;
 
 /**
  * @author shashi
@@ -12,10 +11,10 @@ import domain.User;
 @service
 public interface UserService {
 
-	List<User> getAllUsers();
+	UserDto getAllUsers();
 
 	boolean updateDesignation(String designation);
 
-	User createUser(User user);
+	User createUser(UserDto user);
 
 }

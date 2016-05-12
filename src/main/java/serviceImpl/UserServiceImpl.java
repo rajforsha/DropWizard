@@ -1,10 +1,9 @@
 package serviceImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import domain.User;
+import dto.UserDto;
 import service.UserService;
+import utils.Beanutil;
 
 /**
  * @author shashi
@@ -12,28 +11,29 @@ import service.UserService;
  */
 public class UserServiceImpl implements UserService {
 
-	public List<User> getAllUsers() {
-
-		List<User> userList = new ArrayList<User>();
-		User user1 = new User();
-		user1.setAge(23);
-		user1.setDesignation("GSE");
-		user1.setName("Shashi");
-		user1.setPassword("password");
-		userList.add(user1);
-		return userList;
+	public UserDto getAllUsers() {
+		UserDto userDto = new UserDto();
+		userDto.setAge(23);
+		userDto.setDesignation("GSE");
+		userDto.setName("Shashi");
+		userDto.setPassword("password");
+		User user = new User();
+		Beanutil.convert(userDto, user);
+		System.out.println(user.toString());
+		return userDto;
 	}
 
 	public boolean updateDesignation(String designation) {
-
-		List<User> oldList = getAllUsers();
-		User user1 = oldList.get(0);
-		user1.setDesignation(designation);
 		return true;
 	}
 
 	public User createUser(User user) {
 		return user;
+	}
+
+	public User createUser(UserDto user) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
