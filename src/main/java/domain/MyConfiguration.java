@@ -1,24 +1,30 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.dropwizard.Configuration;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
 public class MyConfiguration extends Configuration {
 
-	private String name;
+	@JsonProperty("couchbase")
+	public CouchbaseConfiguration config;
+
+	@JsonProperty("swagger")
+	public SwaggerBundleConfiguration swaggerBundleConfiguration;
 
 	/**
-	 * @return the name
+	 * @return the config
 	 */
-	public String getName() {
-		return name;
+	public CouchbaseConfiguration getConfig() {
+		return config;
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param config
+	 *            the config to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setConfig(CouchbaseConfiguration config) {
+		this.config = config;
 	}
-
 }
