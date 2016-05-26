@@ -1,8 +1,13 @@
 package service;
 
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import annotations.service;
 import domain.User;
-import dto.UserDto;
 
 /**
  * @author shashi
@@ -11,10 +16,10 @@ import dto.UserDto;
 @service
 public interface UserService {
 
-	UserDto getAllUsers();
+	User getUsers(String id) throws JsonParseException, JsonMappingException, IOException;
 
 	boolean updateDesignation(String designation);
 
-	User createUser(UserDto user);
+	Boolean createUser(User user) throws JsonProcessingException;
 
 }
