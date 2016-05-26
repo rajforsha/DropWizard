@@ -1,3 +1,11 @@
+couchbase:
+  node: http://127.0.0.1:8091/pools
+  bucket: default
+  password: 123456
+
+swagger:
+  resourcePackage: resource
+
 server:
   applicationConnectors:
   - type: http 

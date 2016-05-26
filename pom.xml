@@ -15,6 +15,12 @@
 			<artifactId>dropwizard-auth</artifactId>
 			<version>0.9.2</version>
 		</dependency>
+		<!-- http://mvnrepository.com/artifact/com.wordnik/swagger-jaxrs_2.10 -->
+		<dependency>
+			<groupId>io.federecio</groupId>
+			<artifactId>dropwizard-swagger</artifactId>
+			<version>0.7.0</version>
+		</dependency>
 		<!-- http://mvnrepository.com/artifact/com.couchbase.client/couchbase-client -->
 		<dependency>
 			<groupId>com.couchbase.client</groupId>
