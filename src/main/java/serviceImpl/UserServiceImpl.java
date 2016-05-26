@@ -1,9 +1,16 @@
 package serviceImpl;
 
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import couchbase.CouchbaseWrapper;
+import domain.CouchbaseConfiguration;
 import domain.User;
-import dto.UserDto;
 import service.UserService;
-import utils.Beanutil;
 
 /**
  * @author shashi
@@ -11,29 +18,31 @@ import utils.Beanutil;
  */
 public class UserServiceImpl implements UserService {
 
-	public UserDto getAllUsers() {
-		UserDto userDto = new UserDto();
-		userDto.setAge(23);
-		userDto.setDesignation("GSE");
-		userDto.setName("Shashi");
-		userDto.setPassword("password");
-		User user = new User();
-		Beanutil.convert(userDto, user);
-		System.out.println(user.toString());
-		return userDto;
-	}
+	public static CouchbaseWrapper wrapper = null;
 
 	public boolean updateDesignation(String designation) {
 		return true;
 	}
 
-	public User createUser(User user) {
-		return user;
+	public Boolean createUser(User user) throws JsonProcessingException {
+		CouchbaseConfiguration config = new CouchbaseConfiguration();
+		config.setBucket("default");
+		config.setNode("http://127.0.0.1:8091/pools");
+		config.setPassword("123456");
+		wrapper = new CouchbaseWrapper(config);
+		ObjectMapper mapper = new ObjectMapper();
+		String result = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
+		boolean isCreated = wrapper.createUser(user.getName(), result);
+		return isCreated;
 	}
 
-	public User createUser(UserDto user) {
-		// TODO Auto-generated method stub
-		return null;
+	public User getUsers(String id) throws JsonParseException, JsonMappingException, IOException {
+		CouchbaseConfiguration config = new CouchbaseConfiguration();
+		config.setBucket("default");
+		config.setNode("http://127.0.0.1:8091/pools");
+		config.setPassword("123456");
+		wrapper = new CouchbaseWrapper(config);
+		return wrapper.getUser(id);
 	}
 
 }
