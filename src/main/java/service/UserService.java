@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import annotations.service;
+import configuration.CouchbaseConfiguration;
 import domain.User;
 
 /**
@@ -16,7 +17,8 @@ import domain.User;
 @service
 public interface UserService {
 
-	User getUsers(String id) throws JsonParseException, JsonMappingException, IOException;
+	User getUsers(String id, CouchbaseConfiguration config)
+			throws JsonParseException, JsonMappingException, IOException;
 
 	boolean updateDesignation(String designation);
 

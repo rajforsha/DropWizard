@@ -19,6 +19,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
+import configuration.CouchbaseConfiguration;
 import domain.User;
 import service.UserService;
 import serviceImpl.UserServiceImpl;
@@ -33,9 +34,19 @@ import serviceImpl.UserServiceImpl;
 public class UserResource {
 
 	private UserService userService = new UserServiceImpl();
-	/*
-	 * @GET public String getHello() { return "hello World"; }
-	 */
+	private CouchbaseConfiguration config;
+
+	public CouchbaseConfiguration getConfig() {
+		return config;
+	}
+
+	public void setConfig(CouchbaseConfiguration config) {
+		this.config = config;
+	}
+
+	public UserResource(CouchbaseConfiguration config) {
+		this.setConfig(config);
+	}
 
 	@GET
 	@Path("/getUsers")
@@ -45,7 +56,7 @@ public class UserResource {
 			@ApiResponse(code = 500, message = "server error") })
 	public Response getUsers(@QueryParam(value = "name") String name)
 			throws JsonParseException, JsonMappingException, IOException {
-		return Response.ok(userService.getUsers(name)).status(200).build();
+		return Response.ok(userService.getUsers(name, config)).status(200).build();
 	}
 
 	@PUT
@@ -69,4 +80,5 @@ public class UserResource {
 		System.out.println("created::" + isCreated);
 		return Response.ok().status(200).build();
 	}
+
 }

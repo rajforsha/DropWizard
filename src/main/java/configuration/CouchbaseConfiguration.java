@@ -1,4 +1,6 @@
-package domain;
+package configuration;
+
+import java.util.List;
 
 /**
  * @author shashi
@@ -6,14 +8,14 @@ package domain;
  */
 public class CouchbaseConfiguration {
 
-	private String node;
+	private List<String> node;
 	private String bucket;
 	private String password;
 
 	/**
 	 * @return the node
 	 */
-	public String getNode() {
+	public List<String> getNode() {
 		return node;
 	}
 
@@ -21,7 +23,7 @@ public class CouchbaseConfiguration {
 	 * @param node
 	 *            the node to set
 	 */
-	public void setNode(String node) {
+	public void setNode(List<String> node) {
 		this.node = node;
 	}
 
