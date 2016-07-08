@@ -1,13 +1,16 @@
+import configuration.CouchbaseConfiguration;
 import configuration.MyConfiguration;
+import couchbase.CouchbaseConnection;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
-import resource.CouchbaseResource;
 import resource.UserResource;
 
 public class MainApplication extends Application<MyConfiguration> {
+
+	private CouchbaseConfiguration couchbaseConfiguration;
 
 	public static void main(String args[]) throws Exception {
 		new MainApplication().run(args);
@@ -16,13 +19,7 @@ public class MainApplication extends Application<MyConfiguration> {
 	@Override
 	public void run(MyConfiguration configuration, Environment environment) throws Exception {
 		environment.jersey().register(new UserResource());
-		environment.jersey().register(new CouchbaseResource(configuration.getConfig()));
-		System.out.println(configuration.getConfig().toString());
-		/*
-		 * environment.jersey().register(new AuthDynamicFeature(new
-		 * BasicCredentialAuthFilter.Builder<User>() .setAuthenticator(new
-		 * SimpleAuthenticator()).setRealm(getName()).buildAuthFilter()));
-		 */
+		setCouchbaseConfiguration(configuration.getConfig());
 	}
 
 	@Override
@@ -34,6 +31,15 @@ public class MainApplication extends Application<MyConfiguration> {
 				return configuration.swaggerBundleConfiguration;
 			}
 		});
+	}
+
+	public CouchbaseConfiguration getCouchbaseConfiguration() {
+		return couchbaseConfiguration;
+	}
+
+	public void setCouchbaseConfiguration(CouchbaseConfiguration couchbaseConfiguration) {
+		this.couchbaseConfiguration = couchbaseConfiguration;
+		CouchbaseConnection.createConnection(couchbaseConfiguration);
 	}
 
 }

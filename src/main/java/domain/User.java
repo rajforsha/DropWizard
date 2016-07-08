@@ -27,14 +27,6 @@ public class User implements Serializable {
 	@GenderMatcher
 	private String gender;
 
-	public User(String username) {
-		this.name = username;
-	}
-
-	public User() {
-		super();
-	}
-
 	/**
 	 * @return the gender
 	 */
