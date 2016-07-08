@@ -17,12 +17,11 @@ import service.UserService;
  */
 public class UserServiceImpl implements UserService {
 
-	public Boolean createUser(User user) throws JsonProcessingException {
+	public static ObjectMapper mapper = new ObjectMapper();
 
-		ObjectMapper mapper = new ObjectMapper();
+	public Boolean createUser(User user) throws JsonProcessingException {
 		String result = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
-		boolean isCreated = CouchbaseWrapper.createUser(user.getName(), result);
-		return isCreated;
+		return CouchbaseWrapper.createUser(user.getName(), result);
 	}
 
 	public User getUsers(String id) throws JsonParseException, JsonMappingException, IOException {

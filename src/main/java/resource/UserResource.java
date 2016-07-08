@@ -34,7 +34,21 @@ import serviceImpl.UserServiceImpl;
 @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
 public class UserResource {
 
-	private UserService userService = new UserServiceImpl();
+	private UserService userService;
+
+	public UserResource() {
+		super();
+		this.userService = new UserServiceImpl();
+	}
+
+	/**
+	 * @param userService
+	 *            the userService to set
+	 */
+	// @Inject
+	// public void setUserService(UserService userService) {
+	// this.userService = userService;
+	// }
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -52,8 +66,7 @@ public class UserResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
 			@ApiResponse(code = 500, message = "server error") })
 	public Response createUser(@ApiParam User user) throws JsonProcessingException {
-		Boolean isCreated = userService.createUser(user);
-		System.out.println("created::" + isCreated);
+		userService.createUser(user);
 		return Response.ok().status(200).build();
 	}
 

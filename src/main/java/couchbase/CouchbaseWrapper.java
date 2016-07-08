@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import domain.User;
-import resource.CouchbaseResource;
 
 /**
  * @author shashi
@@ -19,27 +18,24 @@ public class CouchbaseWrapper {
 
 	public static boolean createUser(String id, String result) {
 
-		if (resource.CouchbaseResource.getClient().add(id, result) != null) {
-			return true;
-		}
-		return false;
+		System.out.println(CouchbaseConnection.getClient().toString());
+		return CouchbaseConnection.getClient().add(id, result) != null;
 	}
 
 	public static User getUser(String id) throws JsonParseException, JsonMappingException, IOException {
-
-		Object result = CouchbaseResource.getClient().get(id);
-
-		User user = mapper.readValue(String.valueOf(result), User.class);
+		System.out.println(CouchbaseConnection.getClient().toString());
+		Object result = CouchbaseConnection.getClient().get(id);
+		User user = mapper.readValue(result.toString(), User.class);
 		return user;
 	}
 
 	public static void updateUser(User user) throws JsonProcessingException {
-		CouchbaseResource.getClient().replace(user.getName(),
+		CouchbaseConnection.getClient().replace(user.getName(),
 				mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user));
 
 	}
 
 	public static void deleteUser(String id) throws JsonProcessingException {
-		CouchbaseResource.getClient().delete(id);
+		CouchbaseConnection.getClient().delete(id);
 	}
 }

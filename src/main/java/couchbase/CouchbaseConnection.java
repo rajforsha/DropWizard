@@ -17,21 +17,27 @@ public class CouchbaseConnection {
 
 	public static CouchbaseClient client = null;
 
-	public static CouchbaseClient getClient(CouchbaseConfiguration config) {
+	/**
+	 * @return the client
+	 */
+	public static CouchbaseClient getClient() {
+		return client;
+	}
+
+	public static void createConnection(CouchbaseConfiguration config) {
 
 		List<URI> uriList = new ArrayList<URI>();
 		for (String uri : config.getNode()) {
 			uriList.add(URI.create(uri));
 		}
 		try {
-			client = new CouchbaseClient(uriList, config.getBucket(), config.getPassword());
+			CouchbaseClient client = new CouchbaseClient(uriList, config.getBucket(), config.getPassword());
 			if (client != null) {
+				CouchbaseConnection.client = client;
 				System.out.println("couchbase Connection Done!!");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return client;
-
 	}
 }
