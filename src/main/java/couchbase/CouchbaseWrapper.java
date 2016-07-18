@@ -1,41 +1,44 @@
 package couchbase;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import domain.User;
 
 /**
  * @author shashi
  *
  */
 public class CouchbaseWrapper {
-	public static ObjectMapper mapper = new ObjectMapper();
 
-	public static boolean createUser(String id, String result) {
-
-		System.out.println(CouchbaseConnection.getClient().toString());
+	public static boolean createDocument(String id, String result) {
 		return CouchbaseConnection.getClient().add(id, result) != null;
 	}
 
-	public static User getUser(String id) throws JsonParseException, JsonMappingException, IOException {
-		System.out.println(CouchbaseConnection.getClient().toString());
-		Object result = CouchbaseConnection.getClient().get(id);
-		User user = mapper.readValue(result.toString(), User.class);
-		return user;
+	public static Object getDocument(String id) throws JsonParseException, JsonMappingException, IOException {
+		return CouchbaseConnection.getClient().get(id);
 	}
 
-	public static void updateUser(User user) throws JsonProcessingException {
-		CouchbaseConnection.getClient().replace(user.getName(),
-				mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user));
+	public static Boolean updateDocument(String id, String result) throws JsonProcessingException {
 
+		return CouchbaseConnection.getClient().replace(id, result) != null;
 	}
 
-	public static void deleteUser(String id) throws JsonProcessingException {
-		CouchbaseConnection.getClient().delete(id);
+	public static Boolean deleteDocument(String id) throws JsonProcessingException {
+		return CouchbaseConnection.getClient().delete(id) != null;
+	}
+
+	public static List<Object> findAll(List<String> keys) {
+		Map<String, Object> map = CouchbaseConnection.getClient().getBulk(keys);
+		List<Object> objectList = new ArrayList<Object>();
+		for (Entry<String, Object> object : map.entrySet()) {
+			objectList.add(object);
+		}
+		return objectList;
 	}
 }
