@@ -8,12 +8,12 @@ import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import resource.UserResource;
 
-public class MainApplication extends Application<MyConfiguration> {
+public class DropwizardApplication extends Application<MyConfiguration> {
 
 	private CouchbaseConfiguration couchbaseConfiguration;
 
 	public static void main(String args[]) throws Exception {
-		new MainApplication().run(args);
+		new DropwizardApplication().run(args);
 	}
 
 	@Override
@@ -41,5 +41,4 @@ public class MainApplication extends Application<MyConfiguration> {
 		this.couchbaseConfiguration = couchbaseConfiguration;
 		CouchbaseConnection.createConnection(couchbaseConfiguration);
 	}
-
 }

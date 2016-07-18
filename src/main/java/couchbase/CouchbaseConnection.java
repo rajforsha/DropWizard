@@ -15,7 +15,7 @@ import configuration.CouchbaseConfiguration;
  */
 public class CouchbaseConnection {
 
-	public static CouchbaseClient client = null;
+	public static CouchbaseClient client;
 
 	/**
 	 * @return the client
@@ -31,9 +31,8 @@ public class CouchbaseConnection {
 			uriList.add(URI.create(uri));
 		}
 		try {
-			CouchbaseClient client = new CouchbaseClient(uriList, config.getBucket(), config.getPassword());
+			client = new CouchbaseClient(uriList, config.getBucket(), config.getPassword());
 			if (client != null) {
-				CouchbaseConnection.client = client;
 				System.out.println("couchbase Connection Done!!");
 			}
 		} catch (IOException e) {

@@ -1,6 +1,7 @@
 package service;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,12 +17,12 @@ import domain.User;
 @service
 public interface UserService {
 
-	User getUsers(String id) throws JsonParseException, JsonMappingException, IOException;
+	List<User> getUsers(String id) throws JsonParseException, JsonMappingException, IOException;
 
-	Boolean updateUser(User user) throws JsonProcessingException;
+	Boolean updateUser(User user) throws JsonProcessingException, IllegalArgumentException, IOException;
 
-	Boolean createUser(User user) throws JsonProcessingException;
+	Boolean createUser(User user) throws JsonProcessingException, IOException;
 
-	Boolean deleteUser(String id) throws JsonProcessingException;
+	Boolean deleteUser(String id) throws JsonProcessingException, IOException;
 
 }

@@ -1,6 +1,6 @@
 package domain;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,12 +10,14 @@ import annotations.GenderMatcher;
  * @author shashi
  *
  */
-public class User implements Serializable {
+public class User implements Domain {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4159113759201400544L;
+
 	@JsonProperty("name")
+	@NotNull(groups = { OnCreateValidate.class, OnUpdateValidate.class })
 	private String name;
 	@JsonProperty("password")
 	private String password;
@@ -24,7 +26,7 @@ public class User implements Serializable {
 	@JsonProperty("designation")
 	private String designation;
 	@JsonProperty("gender")
-	@GenderMatcher
+	@GenderMatcher(groups = { OnCreateValidate.class, OnUpdateValidate.class })
 	private String gender;
 
 	/**
