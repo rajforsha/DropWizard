@@ -14,6 +14,8 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -23,23 +25,28 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import domain.OnCreateValidate;
 import domain.OnUpdateValidate;
 import domain.User;
+import dto.UserDto;
 import io.dropwizard.validation.Validated;
 import service.UserService;
-import serviceImpl.UserServiceImpl;
+import support.AbstractSupport;
+import support.GenericService;
 
 /**
  * @author shashi
  *
  */
+
 @Path("/users")
 @Api(value = "/users", description = "users operations")
 @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-public class UserResource {
+@Singleton
+public class UserResource extends AbstractSupport<User, UserDto> {
 
 	private UserService userService;
 
-	public UserResource() {
-		this.userService = new UserServiceImpl();
+	@Inject
+	public UserResource(UserService userService) {
+		this.userService = userService;
 	}
 
 	/**
@@ -64,7 +71,7 @@ public class UserResource {
 			@ApiResponse(code = 500, message = "server error") })
 
 	public Response createUser(@ApiParam @Validated(value = OnCreateValidate.class) User user) throws IOException {
-		userService.createUser(user);
+		super.create(user);
 		return Response.ok().status(200).build();
 	}
 
@@ -75,7 +82,7 @@ public class UserResource {
 			@ApiResponse(code = 500, message = "server error") })
 	public Response updateDesigantion(@ApiParam @Validated(value = OnUpdateValidate.class) User user)
 			throws IllegalArgumentException, IOException {
-		userService.updateUser(user);
+		super.update(user);
 		return Response.ok().status(200).build();
 	}
 
@@ -85,7 +92,13 @@ public class UserResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
 			@ApiResponse(code = 500, message = "server error") })
 	public Response deleteUser(@QueryParam(value = "id") String id) throws IOException {
-		userService.deleteUser(id);
+		super.delete(id);
 		return Response.ok().status(200).build();
 	}
+
+	@Override
+	public GenericService getGenericService() {
+		return userService;
+	}
+
 }

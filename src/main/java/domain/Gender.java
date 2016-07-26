@@ -4,7 +4,7 @@ package domain;
  * @author shashi
  *
  */
-public enum Gender {
+public enum Gender implements EnumMatcher {
 	MALE("male"), FEMALE("female");
 	private String value;
 

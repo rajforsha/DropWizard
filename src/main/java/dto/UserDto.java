@@ -2,7 +2,7 @@ package dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserDto {
+public class UserDto implements Dto {
 
 	@JsonProperty("name")
 	private String name;
