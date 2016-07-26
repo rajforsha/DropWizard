@@ -10,16 +10,16 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import couchbase.CouchbaseWrapper;
+import domain.Domain;
 import domain.RootLookup;
 import domain.User;
-import service.AbstractService;
 import service.UserService;
 
 /**
  * @author shashi
  *
  */
-public class UserServiceImpl extends AbstractService implements UserService {
+public class UserServiceImpl implements UserService {
 
 	public static ObjectMapper mapper;
 	public static final String ROOT_ID = "lookuptable:user:rootid";
@@ -29,52 +29,63 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		mapper = new ObjectMapper();
 	}
 
-	public Boolean createUser(User user) throws IOException {
-		String result = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
-		afterCreate(user);
-		return CouchbaseWrapper.createDocument(user.getName(), result);
-	}
-
-	public List<User> getUsers(String id) throws JsonParseException, JsonMappingException, IOException {
-		List<User> userList = new ArrayList<User>();
+	public List<Domain> getUsers(String id) throws JsonParseException, JsonMappingException, IOException {
+		List<Domain> userList = new ArrayList<Domain>();
 		if (id == null) {
-			RootLookup lookup = mapper.readValue(CouchbaseWrapper.getDocument(ROOT_ID).toString(), RootLookup.class);
-			List<String> keys = lookup.getChildIds();
-			for (String key : keys) {
-				userList.add(mapper.readValue(CouchbaseWrapper.getDocument(key).toString(), User.class));
-			}
+			userList.addAll(findAll());
 		} else {
-			userList.add(mapper.readValue(CouchbaseWrapper.getDocument(id).toString(), User.class));
+			userList.add((User) findOne(id, User.class));
 		}
 		return userList;
 	}
 
-	public Boolean updateUser(User user)
-			throws IllegalArgumentException, JsonParseException, JsonMappingException, IOException {
-		User oldUser = mapper.readValue(CouchbaseWrapper.getDocument(user.getName()).toString(), User.class);
-		if (user.getAge() != 0)
-			oldUser.setAge(user.getAge());
-		if (user.getDesignation() != null)
-			oldUser.setDesignation(user.getDesignation());
-		if (user.getGender() != null)
-			oldUser.setGender(user.getGender());
-		if (user.getPassword() != null)
-			oldUser.setPassword(user.getPassword());
-		return CouchbaseWrapper.updateDocument(oldUser.getName(),
+	public List<Domain> findAll() throws JsonParseException, JsonMappingException, IOException {
+		List<Domain> userList = new ArrayList<Domain>();
+		RootLookup lookup = mapper.readValue(CouchbaseWrapper.getDocument(ROOT_ID).toString(), RootLookup.class);
+		List<String> keys = lookup.getChildIds();
+		for (String key : keys) {
+			userList.add((User) findOne(key, User.class));
+		}
+		return userList;
+	}
+
+	public Boolean create(Domain entity, Class<?> cls) throws IOException {
+		String result = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity);
+		afterCreate(entity);
+		return CouchbaseWrapper.createDocument(((User) entity).getName(), result);
+
+	}
+
+	public Domain findOne(String id, Class<?> cls) throws JsonParseException, JsonMappingException, IOException {
+		User user = (User) (mapper.readValue(CouchbaseWrapper.getDocument(id).toString(), cls));
+		return user;
+	}
+
+	public void update(Domain entity, Class<?> cls) throws JsonParseException, JsonMappingException, IOException {
+		User oldUser = (User) mapper.readValue(CouchbaseWrapper.getDocument(((User) entity).getName()).toString(), cls);
+		if (((User) entity).getAge() != 0)
+			oldUser.setAge(((User) entity).getAge());
+		if (((User) entity).getDesignation() != null)
+			oldUser.setDesignation(((User) entity).getDesignation());
+		if (((User) entity).getGender() != null)
+			oldUser.setGender(((User) entity).getGender());
+		if (((User) entity).getPassword() != null)
+			oldUser.setPassword(((User) entity).getPassword());
+		CouchbaseWrapper.updateDocument(oldUser.getName(),
 				mapper.writerWithDefaultPrettyPrinter().writeValueAsString(oldUser));
+
 	}
 
-	public Boolean deleteUser(String id) throws IOException {
+	public void delete(String id) throws JsonParseException, JsonMappingException, IOException {
 		afterDelete(id);
-		return CouchbaseWrapper.deleteDocument(id);
+		CouchbaseWrapper.deleteDocument(id);
 	}
 
-	@Override
-	public void afterCreate(User user) throws JsonParseException, JsonMappingException, IOException {
+	public void afterCreate(Domain user) throws JsonParseException, JsonMappingException, IOException {
 		if (CouchbaseWrapper.getDocument(ROOT_ID) != null) {
 			RootLookup lookup = mapper.readValue(CouchbaseWrapper.getDocument(ROOT_ID).toString(), RootLookup.class);
 			List<String> childIds = lookup.getChildIds();
-			childIds.add(user.getName());
+			childIds.add(((User) user).getName());
 			lookup.setChildIds(childIds);
 			CouchbaseWrapper.updateDocument(ROOT_ID,
 					mapper.writerWithDefaultPrettyPrinter().writeValueAsString(lookup));
@@ -82,13 +93,12 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		} else {
 			RootLookup lookup = new RootLookup();
 			lookup.setParentId(ROOT_ID);
-			lookup.setChildIds(Arrays.asList(user.getName()));
+			lookup.setChildIds(Arrays.asList(((User) user).getName()));
 			CouchbaseWrapper.createDocument(ROOT_ID,
 					mapper.writerWithDefaultPrettyPrinter().writeValueAsString(lookup));
 		}
 	}
 
-	@Override
 	public void afterDelete(String id) throws JsonParseException, JsonMappingException, IOException {
 		RootLookup lookup = mapper.readValue(CouchbaseWrapper.getDocument(ROOT_ID).toString(), RootLookup.class);
 		List<String> childIds = lookup.getChildIds();

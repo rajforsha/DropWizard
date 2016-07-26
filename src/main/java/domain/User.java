@@ -26,7 +26,7 @@ public class User implements Domain {
 	@JsonProperty("designation")
 	private String designation;
 	@JsonProperty("gender")
-	@GenderMatcher(groups = { OnCreateValidate.class, OnUpdateValidate.class })
+	@GenderMatcher(groups = { OnCreateValidate.class })
 	private String gender;
 
 	/**

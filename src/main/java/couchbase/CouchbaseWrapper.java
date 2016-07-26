@@ -25,7 +25,6 @@ public class CouchbaseWrapper {
 	}
 
 	public static Boolean updateDocument(String id, String result) throws JsonProcessingException {
-
 		return CouchbaseConnection.getClient().replace(id, result) != null;
 	}
 

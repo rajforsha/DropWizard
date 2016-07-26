@@ -1,3 +1,6 @@
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import configuration.CouchbaseConfiguration;
 import configuration.MyConfiguration;
 import couchbase.CouchbaseConnection;
@@ -7,6 +10,7 @@ import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import resource.UserResource;
+import utils.CustomBinder;
 
 public class DropwizardApplication extends Application<MyConfiguration> {
 
@@ -18,8 +22,18 @@ public class DropwizardApplication extends Application<MyConfiguration> {
 
 	@Override
 	public void run(MyConfiguration configuration, Environment environment) throws Exception {
-		environment.jersey().register(new UserResource());
+		/*
+		 * injecting Resource.
+		 */
+		Injector injector = Guice.createInjector(new CustomBinder());
+		UserResource userResource = injector.getInstance(UserResource.class);
+		environment.jersey().register(userResource);
+		/*
+		 * Injection Done.
+		 */
 		setCouchbaseConfiguration(configuration.getConfig());
+		createInjector();
+
 	}
 
 	@Override
@@ -40,5 +54,9 @@ public class DropwizardApplication extends Application<MyConfiguration> {
 	public void setCouchbaseConfiguration(CouchbaseConfiguration couchbaseConfiguration) {
 		this.couchbaseConfiguration = couchbaseConfiguration;
 		CouchbaseConnection.createConnection(couchbaseConfiguration);
+	}
+
+	private void createInjector() {
+
 	}
 }
